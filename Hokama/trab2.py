@@ -1,0 +1,102 @@
+
+class HashItem: 
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+
+
+class No: 
+    def __init__(self, valor):
+        self.valor = valor
+        self.esquerda = None
+        self.direita = None
+
+class Arvore:
+    def __init__(self):
+        self.raiz = None
+
+    def inserir(self, valor): 
+        if self.raiz == None:
+            self.raiz = No(valor)
+        else:
+            inserirRecursivo(self.raiz, valor)
+
+    def inserirRecursivo(self, no, valor): 
+        if no.valor.key < valor.key:
+            if no.direita == None:
+                no.direita = No(valor)
+            else: 
+                inserirRecursivo(no.direita, valor)
+
+        #Não há tratamento de duplicatas pois não há duplicatas nas entradas, logo serão inseridas juntos com else do lado esquerdo da lista.     
+        else:
+            if no.esquerda == None:
+                no.esquerda = No(valor)
+            else: 
+                inserirRecursivo(no.esquerda, valor)
+
+    def imprimir_arvore(self):
+        if self.raiz is None:
+            print("Árvore vazia")
+            return
+        
+        print("Estrutura da árvore:")
+        self._imprimir_no(self.raiz, 0)
+    
+    def _imprimir_no(self, no, nivel):
+        if no is None:
+            return
+        
+        # Imprime o nó atual com indentação baseada no nível
+        print("  " * nivel + f"└─ {no.valor}")
+        
+        # Imprime os filhos (se existirem)
+        if no.esquerda is not None or no.direita is not None:
+            if no.esquerda is not None:
+                self._imprimir_no(no.esquerda, nivel + 1)
+            else:
+                print("  " * (nivel + 1) + "└─ None")
+                
+            if no.direita is not None:
+                self._imprimir_no(no.direita, nivel + 1)
+            else:
+                print("  " * (nivel + 1) + "└─ None")
+    
+    
+
+class HashTable: 
+    def __init__(self):
+        self.size = 29
+        self.slots = [None] * self.size
+
+    def hash(self, key):
+        mult = 1
+        hash_value = 0
+        for c in key:
+            hash_value += mult * ord(c)
+            mult += 1
+        return hash_value
+    
+    def put(self, key, value):  
+        
+        hi = HashItem(key, value)  #Cria o HashItem
+        
+        hv = self.hash(key) % self.size #Aplica função Hash na chave, hv (hashValue)
+        
+        if self.slots != None:           
+            self.slots[hv].inserir(hi)
+
+        else:
+            self.slots[hv] = Arvore()
+            self.slots[hv].inserir(hi)
+            
+        return
+
+           
+
+
+if __name__ == "__main__":
+    
+
+
+
