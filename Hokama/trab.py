@@ -84,17 +84,7 @@ class Arvore:
             if no.direita is not None:
                 self._imprimir_no(no.direita, nivel + 1)
             else:
-                print("  " * (nivel + 1) + "└─ None")
-    
-    
-        
-
-            
-            
-                
-    
-        
-            
+                print("  " * (nivel + 1) + "└─ None")        
 
                 
 class Fila:
@@ -119,17 +109,8 @@ class Fila:
         return self.fila[0]
      
 if __name__ == "__main__":
-    A = Arvore()
-    A.inserir(1)
-    A.inserir(2)
-    A.inserir(3)
-    A.inserir(4)
-    A.inserir(5)
-    A.inserir(6)
-    A.inserir(7)
-    A.inserir(8)
-    raiz = A.raiz
-    A.imprimir_arvore()
+
+    a = input()
 
 
 

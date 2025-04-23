@@ -35,6 +35,22 @@ class Arvore:
             else: 
                 inserirRecursivo(no.esquerda, valor)
 
+    def buscaBinaria(self, no, chave):
+        if no.valor.key == chave: 
+            return no.valor.value
+        elif no.valor.key < chave and no.direita != None:
+            return buscaBinaria(no.direita, chave)
+        elif no.valor.key > chave and no.esquerda != None:
+            return buscaBinaria(no.esquerda, chave)
+        
+        return None         
+    
+            
+             
+            
+        
+    
+    
     def imprimir_arvore(self):
         if self.raiz is None:
             print("Árvore vazia")
@@ -77,13 +93,15 @@ class HashTable:
             mult += 1
         return hash_value
     
+
     def put(self, key, value):  
         
         hi = HashItem(key, value)  #Cria o HashItem
         
         hv = self.hash(key) % self.size #Aplica função Hash na chave, hv (hashValue)
         
-        if self.slots != None:           
+        if self.slots != None:
+            self.slots[hv] = Arvore()       
             self.slots[hv].inserir(hi)
 
         else:
@@ -91,12 +109,83 @@ class HashTable:
             self.slots[hv].inserir(hi)
             
         return
+    
+    #Passa o hash na chave para saber em qual slots está, se estiver não estiver nulo,
+    #chama buscaBinaria na classe Arvore Binaria.
+    def buscaNaTable(self, chave):
+        posicaoTable = hash(chave) % self.size
+        print(f"chave = {hash(chave)} size da table = {self.size}")
+        print(f"posicao na table = {posicaoTable}")
+        
+        arvore = self.slots[posicaoTable]
+        if arvore == None:
+            return
+        else: 
+            arvore.buscaBinaria(arvore.raiz, chave)
+            
+            
+            
+
+            
+        
+        
+        
+    
+def Progama():
+    TabelaA = parteA()
+    entrada = input()
+    entrada = entrada.split(" ", 1)
+    print(entrada)
+    
+    if entrada[0] == "r":
+        X = TabelaA.buscaNaTable(entrada[1])
+        if X == None:
+            print(f"{entrada[1]}\nNão Encontrado")
+        else:
+            print(f"{X}\n")
+    
+    
+    
+
+def parteA(): 
+    Table = HashTable()
+    #Inicializa a tabela hash A
+    with open("t01/craft.txt", mode="r", encoding="utf-8") as crafts: 
+            itens = []
+            contador = 0
+            contadorDeLinhas = False
+
+            #Processa os dados do craft.txt
+            for linha in crafts: 
+                linha = linha.strip()
+                if linha == "":
+                    juntaLista = "\n".join(itens)
+                    valor = juntaLista
+                    #Adiciona dados na tabela hash A
+                    Table.put(chave, valor)
+                    #----------------
+                    contador+=1
+                    itens = []
+                    contadorDeLinhas = False
+                elif contadorDeLinhas == False:
+                    chave = linha
+                    contadorDeLinhas = True
+                else: 
+                    itens.append(linha)
+                    contadorDeLinhas = True
+        
+        
+        
+    print("HashTable adicionada com sucesso.")
+    return Table
+
+
+
 
            
 
 
 if __name__ == "__main__":
-    
-
+    c = Progama()
 
 
