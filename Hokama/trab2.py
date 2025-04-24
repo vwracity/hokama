@@ -19,65 +19,52 @@ class Arvore:
         if self.raiz == None:
             self.raiz = No(valor)
         else:
-            inserirRecursivo(self.raiz, valor)
+            self.inserirRecursivo(self.raiz, valor)
 
     def inserirRecursivo(self, no, valor): 
         if no.valor.key < valor.key:
             if no.direita == None:
                 no.direita = No(valor)
             else: 
-                inserirRecursivo(no.direita, valor)
+                self.inserirRecursivo(no.direita, valor)
 
         #Não há tratamento de duplicatas pois não há duplicatas nas entradas, logo serão inseridas juntos com else do lado esquerdo da lista.     
         else:
             if no.esquerda == None:
                 no.esquerda = No(valor)
             else: 
-                inserirRecursivo(no.esquerda, valor)
+                self.inserirRecursivo(no.esquerda, valor)
 
     def buscaBinaria(self, no, chave):
+        if no is None:
+            return None
+        
         if no.valor.key == chave: 
             return no.valor.value
-        elif no.valor.key < chave and no.direita != None:
-            return buscaBinaria(no.direita, chave)
-        elif no.valor.key > chave and no.esquerda != None:
-            return buscaBinaria(no.esquerda, chave)
+        
+        elif no.valor.key < chave:
+            return self.buscaBinaria(no.direita, chave)
+        
+        elif no.valor.key > chave:
+            return self.buscaBinaria(no.esquerda, chave)
         
         return None         
     
             
              
-            
         
+    def printArvore(self):
+        if self.raiz == None: 
+            print("None")
+        else: 
+            self.printArvoreRecursivo(self.raiz)
+            return
     
-    
-    def imprimir_arvore(self):
-        if self.raiz is None:
-            print("Árvore vazia")
+    def printArvoreRecursivo(self, no):
+        if no == None: 
             return
         
-        print("Estrutura da árvore:")
-        self._imprimir_no(self.raiz, 0)
-    
-    def _imprimir_no(self, no, nivel):
-        if no is None:
-            return
         
-        # Imprime o nó atual com indentação baseada no nível
-        print("  " * nivel + f"└─ {no.valor}")
-        
-        # Imprime os filhos (se existirem)
-        if no.esquerda is not None or no.direita is not None:
-            if no.esquerda is not None:
-                self._imprimir_no(no.esquerda, nivel + 1)
-            else:
-                print("  " * (nivel + 1) + "└─ None")
-                
-            if no.direita is not None:
-                self._imprimir_no(no.direita, nivel + 1)
-            else:
-                print("  " * (nivel + 1) + "└─ None")
-    
     
 
 class HashTable: 
@@ -100,8 +87,7 @@ class HashTable:
         
         hv = self.hash(key) % self.size #Aplica função Hash na chave, hv (hashValue)
         
-        if self.slots != None:
-            self.slots[hv] = Arvore()       
+        if self.slots[hv] != None:    
             self.slots[hv].inserir(hi)
 
         else:
@@ -113,16 +99,18 @@ class HashTable:
     #Passa o hash na chave para saber em qual slots está, se estiver não estiver nulo,
     #chama buscaBinaria na classe Arvore Binaria.
     def buscaNaTable(self, chave):
-        posicaoTable = hash(chave) % self.size
-        print(f"chave = {hash(chave)} size da table = {self.size}")
-        print(f"posicao na table = {posicaoTable}")
+        posicaoTable = self.hash(chave) % self.size
         
         arvore = self.slots[posicaoTable]
         if arvore == None:
             return
         else: 
-            arvore.buscaBinaria(arvore.raiz, chave)
-            
+            return arvore.buscaBinaria(arvore.raiz, chave)
+    
+    def printTable(self):
+        for i in self.slots: 
+            print(i.printArvore)
+        return
             
             
 
@@ -131,18 +119,20 @@ class HashTable:
         
         
     
-def Progama():
+def Programa():
     TabelaA = parteA()
     entrada = input()
     entrada = entrada.split(" ", 1)
-    print(entrada)
     
     if entrada[0] == "r":
         X = TabelaA.buscaNaTable(entrada[1])
         if X == None:
             print(f"{entrada[1]}\nNão Encontrado")
         else:
-            print(f"{X}\n")
+            print(f"{entrada[1]}\n{X}\n")
+    
+    if entrada[0] == "p" and entrada[1] == "r":
+        print(TabelaA.printTable)
     
     
     
@@ -180,12 +170,7 @@ def parteA():
     return Table
 
 
-
-
-           
-
-
 if __name__ == "__main__":
-    c = Progama()
+    c = Programa()
 
 
