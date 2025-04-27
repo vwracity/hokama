@@ -29,11 +29,22 @@ class Arvore:
                 self.inserirRecursivo(no.direita, valor)
 
         #Não há tratamento de duplicatas pois não há duplicatas nas entradas, logo serão inseridas juntos com else do lado esquerdo da lista.     
-        else:
+        elif no.valor.key > valor.key:
             if no.esquerda == None:
                 no.esquerda = No(valor)
             else: 
                 self.inserirRecursivo(no.esquerda, valor)
+        
+        #Se o valor for igual erá apendar na string.
+        else: 
+            if not isinstance(no.valor.value, list):
+                aux = no.valor.value
+                no.valor.value = []
+                no.valor.value.append(aux)
+                no.valor.value.append(valor.value)
+            else:
+                no.valor.value.append(valor.value)
+            
 
     def buscaBinaria(self, no, chave):
         if no is None:
@@ -52,18 +63,11 @@ class Arvore:
     
             
              
-        
-    def printArvore(self):
-        if self.raiz == None: 
-            print("None")
-        else: 
-            self.printArvoreRecursivo(self.raiz)
-            return
-    
-    def printArvoreRecursivo(self, no):
-        if no == None: 
-            return
-        
+    def printArvore(self, no):
+        if no == None:
+            return None
+        else:
+            return (no.valor.key, self.printArvore(no.esquerda), self.printArvore(no.direita)) 
         
     
 
@@ -109,7 +113,10 @@ class HashTable:
     
     def printTable(self):
         for i in self.slots: 
-            print(i.printArvore)
+            if i is None:
+                print(None)
+            else:
+                print(i.printArvore(i.raiz))
         return
             
             
@@ -120,54 +127,92 @@ class HashTable:
         
     
 def Programa():
-    TabelaA = parteA()
+    TabelaA, TabelaB = processaTxt()
     entrada = input()
     entrada = entrada.split(" ", 1)
     
-    if entrada[0] == "r":
-        X = TabelaA.buscaNaTable(entrada[1])
-        if X == None:
-            print(f"{entrada[1]}\nNão Encontrado")
-        else:
-            print(f"{entrada[1]}\n{X}\n")
-    
-    if entrada[0] == "p" and entrada[1] == "r":
-        print(TabelaA.printTable)
+    while entrada[0] != "q": 
+
+        if entrada[0] == "r":
+            X = TabelaA.buscaNaTable(entrada[1])
+            if X == None:
+                print(f"{entrada[1]}\nNão Encontrado")
+            else:
+                print(f"{entrada[1]}\n{X}")
+        
+        if entrada[0] == "p" and entrada[1] == "r":
+            print(TabelaA.printTable())
+        
+        if entrada[0] == "i":
+            X = TabelaB.buscaNaTable(entrada[1])
+            if X == None:
+                print(f"{entrada[1]}\nNão Encontrado")
+            else:
+                print(f"{entrada[1]}")
+                for i in X:
+                    print(f"{i}")
+        
+        if entrada[0] == "p" and entrada[1] == "i":
+            print(TabelaB.printTable())
+        
+        entrada = input()
+        entrada = entrada.split(" ", 1)
+        
     
     
     
 
-def parteA(): 
-    Table = HashTable()
+def processaTxt(): 
+    TableA = HashTable()
+    TableB = HashTable()
     #Inicializa a tabela hash A
     with open("t01/craft.txt", mode="r", encoding="utf-8") as crafts: 
             itens = []
-            contador = 0
             contadorDeLinhas = False
 
             #Processa os dados do craft.txt
             for linha in crafts: 
                 linha = linha.strip()
                 if linha == "":
+                    #ParteA
                     juntaLista = "\n".join(itens)
-                    valor = juntaLista
-                    #Adiciona dados na tabela hash A
-                    Table.put(chave, valor)
-                    #----------------
-                    contador+=1
+                    valorA = juntaLista
+                    TableA.put(chaveA, valorA)
                     itens = []
                     contadorDeLinhas = False
+                    
                 elif contadorDeLinhas == False:
-                    chave = linha
+                    chaveA = linha
+                    #Parte B
+                    valorB = linha
+                    
                     contadorDeLinhas = True
                 else: 
                     itens.append(linha)
+                    #Parte B
+                    chaveB = linha.rsplit(" ", 1)
+                    TableB.put(chaveB[0], valorB)
+                    
                     contadorDeLinhas = True
+
+                # racicionio para botar na tabela B  
+                # linha = linha.strip()    
+                # if linha in crafts:
+                    
+                    
+                # elif contadorDeLinhas == False:
+                #     valorB = linha
+                #     contadorDeLinhas = True
+                # else: 
+                #    chaveB = linha
+                #    Table.put(chaveB, valorB)
+    print(TableB.slots[1])               
+                    
         
         
         
     print("HashTable adicionada com sucesso.")
-    return Table
+    return TableA, TableB
 
 
 if __name__ == "__main__":
