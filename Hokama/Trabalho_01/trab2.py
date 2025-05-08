@@ -20,7 +20,7 @@ class Arvore:
         if self.raiz == None:
             self.raiz = No(valor)
         else:
-            self.inserirRecursivo(self.raiz, valor)
+            self.inserirRecursivo(self.raiz, valor)  
 
     def inserirRecursivo(self, no, valor):
         #Se o valor foi maior vai para direita
