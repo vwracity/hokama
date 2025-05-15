@@ -1,35 +1,100 @@
 import csv
 
+
 def LerArquivo(arquivo):
-    
-    with open (str(arquivo), mode="r", newline="", encoding="utf-8") as file: 
-        
+
+    with open(str(arquivo), mode="r", newline="", encoding="utf-8") as file:
+
         reader = csv.reader(file)
         next(reader)
         tabela = []
 
-        for coluna in reader: 
+        for coluna in reader:
             linhas = []
-            linhas.append(coluna[0]) # Nome
-            linhas.append(float(coluna[1])) # Fofura
-            linhas.append(float(coluna[2])) # Ameaça
-            linhas.append(float(coluna[3])) # Insanidade
-            linhas.append(float(coluna[4])) # Tamanho
-            linhas.append(float(coluna[5])) # Habilidade 
-            linhas.append(float(coluna[6])) # Comédia
+            linhas.append(coluna[0])  # Nome
+            linhas.append(float(coluna[1]))  # Fofura
+            linhas.append(float(coluna[2]))  # Ameaça
+            linhas.append(float(coluna[3]))  # Insanidade
+            linhas.append(float(coluna[4]))  # Tamanho
+            linhas.append(float(coluna[5]))  # Habilidade
+            linhas.append(float(coluna[6]))  # Comédia
             tabela.append(linhas)
-        
-        
-        #for linhas in tabela: 
+
+        # for linhas in tabela:
         #    print(linhas)
-        
 
         return tabela
-        
-  
-        
 
-def Progama(): 
+# Calcula nota e depois faz MergeSort para deixa-las em ordem crescente.
+
+
+def CalculaNota(usuarios, tabela):
+
+    ListaDosRankings = []
+    for j in range(len(usuarios)):
+        RankingDeNotasPorUsuario = []
+        for i in range(len(tabela)):
+            soma = (
+                tabela[i][1] * usuarios[j][0] +  # Fofura
+                tabela[i][2] * usuarios[j][1] +  # Ameaça
+                tabela[i][3] * usuarios[j][2] +  # Insanidade
+                tabela[i][4] * usuarios[j][3] +  # Tamanho
+                tabela[i][5] * usuarios[j][4] +  # Habilidade
+                tabela[i][6] * usuarios[j][5]    # Comédia
+            )
+            brainrotComNota = [tabela[i][0], soma]  # Nome, nota
+            RankingDeNotasPorUsuario.append(brainrotComNota)
+        ListaDosRankings.append(RankingDeNotasPorUsuario)
+
+    for i in range(len(ListaDosRankings)):
+        ListaDosRankings[i] = mergesort(ListaDosRankings[i])
+
+    return ListaDosRankings
+
+
+# Algoritmos de sort
+def merge(listaA, listaB):
+    lista = []
+    i = 0
+    j = 0
+    while i < len(listaA) and j < len(listaB):
+        if listaA[i][1] < listaB[j][1]:
+            lista.append(listaA[i])
+            i += 1
+        else:
+            lista.append(listaB[j])
+            j += 1
+
+    while i < len(listaA):
+        lista.append(listaA[i])
+        i += 1
+
+    while j < len(listaB):
+        lista.append(listaB[j])
+        j += 1
+    return lista
+
+
+def mergesort(lista):
+    if len(lista) <= 1:
+        return lista
+
+    meio = len(lista) // 2
+    listaA = mergesort(lista[:meio])
+    listaB = mergesort(lista[meio:])
+    return merge(listaA, listaB)
+
+# ---------------------------------------------------
+
+
+def CalculaTabelaB(lista):
+    ranking = []
+
+    for i in range(len(lista)):
+		for j in range(len(lista)):
+
+
+def Progama():
     arquivo = input()
     tabela = LerArquivo(arquivo)
     numUsuarios = int(input())
@@ -38,28 +103,11 @@ def Progama():
         pesos = input()
         pesos = pesos.split(' ')
         pesos = [int(i) for i in pesos]
-        print(pesos)
         usuarios.append(pesos)
-    
-    CalculaNota(usuarios, tabela)
+        # Parte A
+        RankingPorUsuario = CalculaNota(usuarios, tabela)
+        # Parte B
 
-def CalculaNota(usuarios, tabela):
-
-    ListaNotas = []
-    for i in range(len(tabela)):
-        soma = (
-                tabela[i][1] * usuarios[0][0] +  # Fofura
-                tabela[i][2] * usuarios[0][1] +  # Ameaça
-                tabela[i][3] * usuarios[0][2] +  # Insanidade
-                tabela[i][4] * usuarios[0][3] +  # Tamanho
-                tabela[i][5] * usuarios[0][4] +  # Habilidade 
-                tabela[i][6] * usuarios[0][5]    # Comédia
-                )
-        brainrotComNota = [tabela[i][0], soma] # Nome, nota
-        ListaNotas.append(brainrotComNota)
-
-    for i in ListaNotas:
-        print(i)
 
 Progama()
-#LerArquivo('brainrot.csv')
+# LerArquivo('brainrot.csv')
