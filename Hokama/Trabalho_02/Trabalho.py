@@ -89,9 +89,22 @@ def mergesort(lista):
 
 def CalculaTabelaB(lista):
     ranking = []
-
+    #Lista[] = Ranking ordenado da lista de usuarios
+    #Lista[][] = Pequena lista do modelo [Brainrot, nota]
+    #Lista[][][] = Brainrot ou nota
     for i in range(len(lista)):
-		for j in range(len(lista)):
+        contador = 0  
+        for j in range(len(lista[0])):
+            if len(ranking) != len(lista[0]):
+                pontos = contador
+                brainrotPontuacao = [lista[i][j][0], pontos] 
+                ranking.append(brainrotPontuacao)        
+                contador+=1
+            else: 
+                ranking[j][1]+=contador
+                contador+=1
+    
+    print(ranking)
 
 
 def Progama():
@@ -104,9 +117,10 @@ def Progama():
         pesos = pesos.split(' ')
         pesos = [int(i) for i in pesos]
         usuarios.append(pesos)
-        # Parte A
-        RankingPorUsuario = CalculaNota(usuarios, tabela)
-        # Parte B
+    # Parte A
+    RankingPorUsuario = CalculaNota(usuarios, tabela)
+    # Parte B
+    CalculaTabelaB(RankingPorUsuario)
 
 
 Progama()
