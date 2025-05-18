@@ -25,9 +25,8 @@ def LerArquivo(arquivo):
 
         return tabela
 
+
 # Calcula nota e depois faz MergeSort para deixa-las em ordem crescente.
-
-
 def CalculaNota(usuarios, tabela):
 
     ListaDosRankings = []
@@ -45,6 +44,7 @@ def CalculaNota(usuarios, tabela):
             brainrotComNota = [tabela[i][0], soma]  # Nome, nota
             RankingDeNotasPorUsuario.append(brainrotComNota)
         ListaDosRankings.append(RankingDeNotasPorUsuario)
+    #print(ListaDosRankings)
 
     for i in range(len(ListaDosRankings)):
         ListaDosRankings[i] = mergesort(ListaDosRankings[i])
@@ -53,17 +53,27 @@ def CalculaNota(usuarios, tabela):
 
 
 # Algoritmos de sort
+
 def merge(listaA, listaB):
     lista = []
     i = 0
     j = 0
+    
     while i < len(listaA) and j < len(listaB):
+
         if listaA[i][1] < listaB[j][1]:
             lista.append(listaA[i])
             i += 1
-        else:
+        elif listaA[i][1] > listaB[j][1]:
             lista.append(listaB[j])
             j += 1
+        else:                          # Se a pontuacao for igual dará preferência a ordem lexicografica.
+            if listaA[i][0] <= listaB[j][0]:
+                lista.append(listaB[j])
+                j += 1
+            else:  
+                lista.append(listaA[i])
+                i += 1
 
     while i < len(listaA):
         lista.append(listaA[i])
@@ -88,26 +98,29 @@ def mergesort(lista):
 
 
 def CalculaTabelaB(lista):
-    ranking = []
-    #Lista[] = Ranking ordenado da lista de usuarios
-    #Lista[][] = Pequena lista do modelo [Brainrot, nota]
-    #Lista[][][] = Brainrot ou nota
+    # Lista[] = Ranking ordenado da lista de usuarios
+    # Lista[][] = Lista da lista de [Brainrot, nota]
+    # Lista[][][] = Brainrot ou nota
+
+    # Dicionario soma tudo de forma simples com algoritmo O(1), vulgo tabela hash,
+    # porem ainda sem ordenação.
+
+    dicionario = {}
     for i in range(len(lista)):
-        contador = 0  
+        contador = 0
         for j in range(len(lista[0])):
-            if len(ranking) != len(lista[0]):
-                pontos = contador
-                brainrotPontuacao = [lista[i][j][0], pontos] 
-                ranking.append(brainrotPontuacao)        
-                contador+=1
-            else: 
-                ranking[j][1]+=contador
-                contador+=1
-    
-    print(ranking)
+            dicionario[lista[i][j][0]] = dicionario.get(lista[i][j][0], 0) + contador
+            contador += 1
+
+    # Converte tudo isso pra uma lista de tuplas para ser possivel ordenar reutilizando
+    # o codigo mergeSort que foi adaptado para receber uma Lista de [brainrot, nota].
+    ranking = list(dicionario.items())
+
+    return mergesort(ranking)
 
 
 def Progama():
+    # Ler o input, e o csv desejado.
     arquivo = input()
     tabela = LerArquivo(arquivo)
     numUsuarios = int(input())
@@ -115,13 +128,22 @@ def Progama():
     for i in range(numUsuarios):
         pesos = input()
         pesos = pesos.split(' ')
-        pesos = [int(i) for i in pesos]
-        usuarios.append(pesos)
+
+        # Corrige os espaços no final da enutrada
+        pesosLimpos = []
+        for i in range(len(pesos)):
+            if pesos[i].strip() != '':
+                pesosLimpos.append(int(pesos[i].strip()))
+
+        usuarios.append(pesosLimpos)
     # Parte A
     RankingPorUsuario = CalculaNota(usuarios, tabela)
     # Parte B
-    CalculaTabelaB(RankingPorUsuario)
+    tabelaB = CalculaTabelaB(RankingPorUsuario)
+
+    for brainrot, pontuacao in reversed(tabelaB):
+        print(f'{brainrot} {pontuacao}')
 
 
-Progama()
-# LerArquivo('brainrot.csv')
+if __name__ == "__main__":
+    Progama()
